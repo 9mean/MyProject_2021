@@ -4,90 +4,108 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.databinding.DataBindingUtil
-import com.example.todoproject.MainActivity.Companion.TAG
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import com.example.todoproject.databinding.ActivityLoginBinding
 import com.example.todoproject.databinding.ActivityMainBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
-
-    private val RC_SIGN_IN = 10
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var auth: FirebaseAuth
+class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItemSelectedListener{
+    private  var fhome: Fragment?=null
+    private  var fsearch: Fragment?=null
+    private  var fnotification: Fragment?=null
+    private  var fuser: Fragment?=null
     private lateinit var binding: ActivityMainBinding
-
-    companion object {
-        const val TAG = "TAG"
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        auth = FirebaseAuth.getInstance()
-        // Configure Google Sign In
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        binding.googleLoginBtn.setOnClickListener {
-            Log.d(TAG, "구글버튼 클릭")
-            googleSignInClient = GoogleSignIn.getClient(this, gso)
-            val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
-        }
-
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(this)
+        //트랜잭션
+        fhome=HomeFragment()
+        supportFragmentManager.beginTransaction().add(R.id.main_frame, fhome!!).setTransition(
+            FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
+        Log.d("TAG","메인액티비티 onCreate")
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
-                // ...
+    override fun onNavigationItemSelected(p0: MenuItem): Boolean {
+        when(p0.itemId){
+            R.id.action_home ->{
+                if(fhome==null){
+                    fhome=HomeFragment()
+                    supportFragmentManager.beginTransaction().add(R.id.main_frame,fhome!!).setTransition(
+                        FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
+                    Log.d("TAG","메인액티비티 home null->create")
+                }
+                if(fhome!=null) supportFragmentManager.beginTransaction().show(fhome!!).commit()
+                if(fsearch!=null) supportFragmentManager.beginTransaction().hide(fsearch!!).commit()
+                if(fuser!=null) supportFragmentManager.beginTransaction().hide(fuser!!).commit()
+                if(fnotification!=null) supportFragmentManager.beginTransaction().hide(fnotification!!).commit()
+            }
+            R.id.action_search -> {
+                if(fsearch==null){
+                    Log.d("TAG","메인액티비티 search null->create")
+                    fsearch=SearchFragment()
+                    supportFragmentManager.beginTransaction().add(R.id.main_frame,fsearch!!).setTransition(
+                        FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
+                }
+                if(fhome!=null) supportFragmentManager.beginTransaction().hide(fhome!!).commit()
+                if(fsearch!=null) supportFragmentManager.beginTransaction().show(fsearch!!).commit()
+                if(fuser!=null) supportFragmentManager.beginTransaction().hide(fuser!!).commit()
+                if(fnotification!=null) supportFragmentManager.beginTransaction().hide(fnotification!!).commit()
+            }
+            R.id.action_notification -> {
+                if(fnotification==null){
+                    Log.d("TAG","메인액티비티 room null->create")
+                    fnotification=NotificationFragment()
+                    supportFragmentManager.beginTransaction().add(R.id.main_frame,fnotification!!).setTransition(
+                        FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
+                }
+                if(fhome!=null) supportFragmentManager.beginTransaction().hide(fhome!!).commit()
+                if(fsearch!=null) supportFragmentManager.beginTransaction().hide(fsearch!!).commit()
+                if(fuser!=null) supportFragmentManager.beginTransaction().hide(fuser!!).commit()
+                if(fnotification!=null) supportFragmentManager.beginTransaction().show(fnotification!!).commit()
+            }
+            R.id.action_user -> {
+                if(fuser==null){
+                    Log.d("TAG","메인액티비티 user null->create")
+                    fuser=UserFragment()
+                    supportFragmentManager.beginTransaction().add(R.id.main_frame,fuser!!).setTransition(
+                        FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
+                }
+                if(fhome!=null) supportFragmentManager.beginTransaction().hide(fhome!!).commit()
+                if(fsearch!=null) supportFragmentManager.beginTransaction().hide(fsearch!!).commit()
+                if(fuser!=null) supportFragmentManager.beginTransaction().show(fuser!!).commit()
+                if(fnotification!=null) supportFragmentManager.beginTransaction().hide(fnotification!!).commit()
             }
         }
+        return true
     }
-        private fun firebaseAuthWithGoogle(idToken: String) {
-            val credential = GoogleAuthProvider.getCredential(idToken, null)
-            auth.signInWithCredential(credential)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success")
-                            val user = auth.currentUser
-                            Log.d(TAG, "user $user")
-                            startActivity(Intent(this, SubActivity::class.java))
-                            finish()
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.exception)
-                            // ...
-                        }
-                        // ...
-                    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("TAG","메인액티비티 onDestroy")
+    }
+    //뒤로가기 두번연속 누를경우 종료시키기
+    private val FINISH_INTERVAL_TIME:Long= 2000
+    private var backPressedTime:Long=0
+    override fun onBackPressed() {
+
+        if(supportFragmentManager.backStackEntryCount == 0) {
+            var tempTime = System.currentTimeMillis();
+            var intervalTime = tempTime - backPressedTime;
+            if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
+                super.onBackPressed();
+            } else {
+                backPressedTime = tempTime;
+                Toast.makeText(this, "'뒤로' 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                return
+            }
         }
+        super.onBackPressed()
+    }
+
+
+
 }
