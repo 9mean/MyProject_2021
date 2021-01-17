@@ -23,6 +23,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        //원형시계
+        maven { url 'https://jitpack.io' }
     }
 }
 
