@@ -30,6 +30,7 @@ class PlanActivity : AppCompatActivity(),TimePicker.OnTimeChangedListener{
             val intent= Intent(this,HomeFragment::class.java)
             intent.putExtra("hour",mhour)
             intent.putExtra("min",mmin)
+            intent.putExtra("title",binding.planTitle.text.toString())
             setResult(100,intent)
             finish()
         }
