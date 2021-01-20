@@ -1,4 +1,4 @@
-package com.example.todoproject
+package com.example.todoproject.user
 
 import android.os.Bundle
 import android.util.Log

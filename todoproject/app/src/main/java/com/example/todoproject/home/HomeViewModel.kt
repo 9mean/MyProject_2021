@@ -1,13 +1,11 @@
-package com.example.todoproject
+package com.example.todoproject.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.todoproject.home.Room.AppDatabase
+import com.example.todoproject.home.Room.Plan
 
 class HomeViewModel(application : Application): AndroidViewModel(application){
     var plans:LiveData<List<Plan>>

@@ -1,6 +1,5 @@
 package com.example.todoproject
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +7,11 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.example.todoproject.databinding.ActivityLoginBinding
 import com.example.todoproject.databinding.ActivityMainBinding
+import com.example.todoproject.home.HomeFragment
+import com.example.todoproject.notification.NotificationFragment
+import com.example.todoproject.search.SearchFragment
+import com.example.todoproject.user.UserFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItemSelectedListener{
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
         setContentView(binding.root)
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this)
         //트랜잭션
-        fhome=HomeFragment()
+        fhome= HomeFragment()
         supportFragmentManager.beginTransaction().add(R.id.main_frame, fhome!!).setTransition(
             FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
         Log.d("TAG","메인액티비티 onCreate")
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
         when(p0.itemId){
             R.id.action_home ->{
                 if(fhome==null){
-                    fhome=HomeFragment()
+                    fhome= HomeFragment()
                     supportFragmentManager.beginTransaction().add(R.id.main_frame,fhome!!).setTransition(
                         FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
                     Log.d("TAG","메인액티비티 home null->create")
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
             R.id.action_search -> {
                 if(fsearch==null){
                     Log.d("TAG","메인액티비티 search null->create")
-                    fsearch=SearchFragment()
+                    fsearch= SearchFragment()
                     supportFragmentManager.beginTransaction().add(R.id.main_frame,fsearch!!).setTransition(
                         FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
                 }
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
             R.id.action_notification -> {
                 if(fnotification==null){
                     Log.d("TAG","메인액티비티 room null->create")
-                    fnotification=NotificationFragment()
+                    fnotification= NotificationFragment()
                     supportFragmentManager.beginTransaction().add(R.id.main_frame,fnotification!!).setTransition(
                         FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
                 }
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
             R.id.action_user -> {
                 if(fuser==null){
                     Log.d("TAG","메인액티비티 user null->create")
-                    fuser=UserFragment()
+                    fuser= UserFragment()
                     supportFragmentManager.beginTransaction().add(R.id.main_frame,fuser!!).setTransition(
                         FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
                 }
