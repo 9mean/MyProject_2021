@@ -10,15 +10,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <ToggleButton
-            android:id="@+id/onetimeAlarmToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOff="onetime alarm off"
-            android:textOn="onetime alarm on"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
         <AnalogClock
             android:id="@+id/analogClock"
             android:layout_width="wrap_content"

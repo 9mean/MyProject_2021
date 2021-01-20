@@ -19,61 +19,46 @@ import kotlin.math.min
 
 class PlanActivity : AppCompatActivity(),TimePicker.OnTimeChangedListener{
     private lateinit var binding: ActivityPlanBinding
-    private var mhour=0
-    private var mmin=0
+    private var shour=0
+    private var smin=0
+    private var ehour=0
+    private var emin=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityPlanBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //binding.timePicker.
-//        val cal=Calendar.getInstance()
-//       // binding.timeRangePicker.setStartTime(cal)
-//        Log.d("TAG", "onCreate: ${cal}")
-//        val tp=binding.timePicker
-//        tp.setOnTimeChangedListener(this,)
-        //var tpd=TimePickerDialog(this,this,1,1,true)
-        binding.timePicker.setOnTimeChangedListener(this)
+        binding.startTimePicker.setOnTimeChangedListener(this)
+        binding.endTimePicker.setOnTimeChangedListener(this)
         binding.timeOkBtn.setOnClickListener {
-
-            //
-//            val calendar=Calendar.getInstance()
-//            calendar.set(Calendar.MINUTE, mmin)
-//            calendar.set(Calendar.HOUR_OF_DAY, mhour)
-//            calendar.set(Calendar.SECOND, 0)
-//            //알람매니저
-//            val alarmManager = getSystemService(ALARM_SERVICE) as? AlarmManager
-//            val intentreceiver = Intent(this, AlarmReceiver::class.java)  // 1
-//            val pendingIntent = PendingIntent.getBroadcast(     // 2
-//                    this, AlarmReceiver.NOTIFICATION_ID, intentreceiver,
-//                    PendingIntent.FLAG_UPDATE_CURRENT)
-//                alarmManager?.set(   // 5
-//                        AlarmManager.RTC_WAKEUP,
-//                        calendar.timeInMillis,
-//                        pendingIntent
-//                )
-//            Log.d(LoginActivity.TAG, "alarm ${calendar.time}")
-//            runBlocking {
-//                delay(2000)
-//            }
-            val intent = Intent(this, HomeFragment::class.java)
-            intent.putExtra("hour", mhour)
-            intent.putExtra("min", mmin)
-            intent.putExtra("title", binding.planTitle.text.toString())
-            setResult(100, intent)
-            finish()
-
-
+            if (HomeFragment.plan.value!!.size==3){
+                Toast.makeText(this, "오늘 계획을 초과하셨어요", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                val intent = Intent(this, HomeFragment::class.java)
+                intent.putExtra("shour", shour)
+                intent.putExtra("smin", smin)
+                intent.putExtra("ehour", ehour)
+                intent.putExtra("emin", emin)
+                intent.putExtra("title", binding.planTitle.text.toString())
+                setResult(100, intent)
+                finish()
+            }
         }
     }
 
-//    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-//        Log.d("TAG", "$hourOfDay $minute")
-//    }
-
     override fun onTimeChanged(view: TimePicker?, hourOfDay: Int, minute: Int) {
         Log.d("TAG", "$hourOfDay $minute")
-        mmin=minute
-        mhour=hourOfDay
+        when (view){
+            binding.startTimePicker->{
+                smin=minute
+                shour=hourOfDay
+            }
+            binding.endTimePicker->{
+                emin=minute
+                ehour=hourOfDay
+            }
+        }
+
     }
 
 }

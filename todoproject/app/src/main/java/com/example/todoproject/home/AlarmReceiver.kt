@@ -22,13 +22,14 @@ class AlarmReceiver : BroadcastReceiver() {
         const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
     }
 
+    var planTitle=""
     lateinit var notificationManager: NotificationManager
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "Received intent : $intent")
         notificationManager = context.getSystemService(
                 Context.NOTIFICATION_SERVICE) as NotificationManager
-
+        planTitle=intent.getStringExtra("planTitle")!!
         createNotificationChannel()
         deliverNotification(context)
     }
@@ -45,13 +46,12 @@ class AlarmReceiver : BroadcastReceiver() {
         val builder =
                 NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_notifications_24)
-                        .setContentTitle("Alert")
-                        .setContentText("This is repeating alarm")
+                        .setContentTitle(planTitle)
+                        .setContentText("시작되었습니다!")
                         .setContentIntent(contentPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL)
-
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
@@ -65,7 +65,7 @@ class AlarmReceiver : BroadcastReceiver() {
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)
-            notificationChannel.description = "AlarmManager Tests"
+            notificationChannel.description = "오머니"
             notificationManager.createNotificationChannel(
                     notificationChannel)
         }
